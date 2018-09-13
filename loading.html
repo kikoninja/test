@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            margin-top: 100px;
+        }
+        .spacer {
+            margin-top: 100px;
+        }
+    </style>
+    <svg id="loader" version="1.1" class="loading" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="80px" height="80px" viewBox="0 0 80 80" xml:space="preserve">
+        <style type="text/css">
+            .loading .circle {
+                stroke: #014aad;
+                transform-origin: 50% 50%;
+                animation: loading 300ms ease-in forwards, spin 500ms 300ms linear infinite;
+            }
+            .success .circle {
+                stroke: #2fb45e;
+                animation: complete 700ms ease-in-out forwards;
+            }
+            .fail .circle {
+                stroke: #838c91;
+                animation: complete 700ms ease-in-out forwards;
+            }
+            .circle {
+                fill: none;
+                stroke-width: 5;
+                stroke-dashoffset: 229.336263712;
+                stroke-dasharray: 229.336263712;
+            }
+            .check {
+                fill:none;
+                stroke: #2fb45e;
+                stroke-width: 5;
+                stroke-dasharray: 43;
+                stroke-dashoffset: 43;
+            }
+            .success .check {
+                animation: complete 700ms ease-in-out forwards;
+            }
+            .x {
+                stroke: #838c91;
+                stroke-width: 5;
+            }
+            .x-1 {
+                stroke-dasharray: 29;
+                stroke-dashoffset: 29;
+            }
+            .x-2 {
+                stroke-dasharray: 29;
+                stroke-dashoffset: 29;
+            }
+            .fail .x-1 {
+                animation: complete 350ms ease-in forwards;
+            }
+            .fail .x-2 {
+                animation: 350ms complete 350ms ease-out forwards;
+            }
+            @keyframes complete {
+                to {
+                    stroke-dashoffset: 0;
+                }
+            }
+            @keyframes loading {
+                to {
+                    stroke-dashoffset: 190;
+                }
+            }
+            @keyframes loading-reverse {
+                from {
+                    stroke-dashoffset: 190;
+                }
+                to {
+                    stroke-dashoffset: 229.336263712;
+                }
+            }
+            @keyframes spin {
+                from {
+                    transform: rotate(0deg);
+                }
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+        </style>
+        <circle cx="40" cy="40" r="36.5" class="circle"/>
+        <polyline class="check" points="25,39.6 35.4,50 55,30 "/>
+        <g class="x" transform="translate(30.000000, 30.000000)">
+            <path class="x-1" d="M0.2,0L20,19.1"/>
+            <path class="x-2" d="M20,0L0.2,19.1"/>
+        </g>
+    </svg>
+    <div class="spacer"></div>
+    <button id="loading">Loading</button>
+    <button id="success">Success</button>
+    <button id="fail">Fail</button>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function() {
+            var iterations = 1;
+            var lastIteration = new Date().getTime();
+            $('#loader .circle').on('animationstart', function(e) {
+                lastIteration = new Date().getTime();
+            });
+            $('#loader .circle').on('animationiteration', function(e) {
+                lastIteration = new Date().getTime();
+                iterations++;
+            });
+            $('#loading').on('click', function() {
+                $('#loader').removeAttr('class').addClass('loading');
+                $('#loader .circle').removeAttr('style');
+            });
+            $('#success').on('click', function() {
+                var remainingTime = 500 - (new Date().getTime() - lastIteration);
+                $('#loader .circle').css({
+                    'animation-iteration-count': '1, ' + iterations++,
+                    'animation-name': 'loading-reverse, spin',
+                    'animation-duration': remainingTime + 'ms, 500ms'
+                });
+                requestAnimationFrame(function() {
+                    setTimeout(function() {
+                        $('#loader .circle').removeAttr('style');
+                        $('#loader').removeAttr('class').addClass('success');
+                    }, remainingTime);
+                });
+            });
+            $('#fail').on('click', function() {
+                var remainingTime = 500 - (new Date().getTime() - lastIteration);
+                $('#loader .circle').css({
+                    'animation-iteration-count': '1, ' + iterations++,
+                    'animation-name': 'loading-reverse, spin',
+                    'animation-duration': remainingTime + 'ms, 500ms'
+                });
+                requestAnimationFrame(function() {
+                    setTimeout(function() {
+                        $('#loader .circle').removeAttr('style');
+                        $('#loader').removeAttr('class').addClass('fail');
+                    }, remainingTime);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
